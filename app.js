@@ -41,4 +41,32 @@ app.use(morgan("combined"));
 
 app.get("/", cookieParserTest, handleHome);
 
-export default app;
+// app valirable을 전부 변수 명으로 하는 객체를 하나로 취급하고 export함.
+class TestClass {}
+
+class UserStorage {
+  loginUser = (id, password) =>
+    new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (
+          (id === "ellie" && password === "dream") ||
+          (id === "coder" && password === "academy")
+        ) {
+          resolve(id);
+        } else {
+          reject(new Error("not found"));
+        }
+      }, 2000);
+    });
+  getRoles(user) {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (user === "ellie") {
+          resolve({ name: "ellie", role: "admin" });
+        } else {
+          reject(new Error("not found"));
+        }
+      }, 1000);
+    });
+  }
+}

@@ -322,6 +322,28 @@ import * as user from user.js
 
 - export default
 
+export default를 사용하면 **'해당 모듈엔 개체가 하나만 있다’**는 사실을 명확히 나태낼 수 있다.<br>
+모듈 전체를 하나의 개채로 지원함
+
+```js
+// 📁 user.js
+export default class User {
+  // export 옆에 'default'를 추가해보았습니다.
+  constructor(name) {
+    this.name = name;
+  }
+}
+```
+
+```js
+// 📁 main.js
+import User from "./user.js"; // {User}가 아닌 User로 클래스를 가져왔습니다.
+
+new User("John");
+```
+
+이런식으로 주고 받을 수 있음
+
 | named export            | default export                  |
 | :---------------------- | :------------------------------ |
 | export class User {...} | export default class User {...} |
