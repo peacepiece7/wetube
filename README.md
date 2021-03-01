@@ -267,3 +267,62 @@ app.use(morgan("dev"));
 
 하지만 [body-parser](https://medium.com/@chullino/1%EB%B6%84-%ED%8C%A8%ED%82%A4%EC%A7%80-%EC%86%8C%EA%B0%9C-body-parser%EB%A5%BC-%EC%86%8C%EA%B0%9C%ED%95%A9%EB%8B%88%EB%8B%A4-%ED%95%98%EC%A7%80%EB%A7%8C-body-parser%EB%A5%BC-%EC%93%B0%EC%A7%80-%EB%A7%88%EC%84%B8%EC%9A%94-bc3cbe0b2fd)가 없어서도 이렇게 하면 쓸 수 있다고 함.<br>
 나중에 참고해서 읽어보자
+
+> json으로 body parsing하기
+
+```js
+// parse application/x-www-form-urlencoded
+app.use(bodyParser.urlencoded({ extended: false }));
+
+// json으로 body parsing할 때 써보자
+// parse application/json
+app.use(bodyParser.json());
+
+app.use(function (req, res) {
+  res.setHeader("Content-Type", "text/plain");
+  res.write("you posted:\n");
+  res.end(JSON.stringify(req.body, null, 2));
+});
+```
+
+나중에 json형식으로 데이터를 주고 받을 떄 쓸 수 있을 듯 나중에 req로 확인해보자,,
+
+## JS export, export defalut
+
+- export 사용하기
+
+export로 데이터를 보낼 떈 아래방식을 사용하고
+
+```js
+//이렇게 변수, 클레스, 함수명 앞에 붙여서 사용하거나
+export const sayhi = () => {
+  console.log("hi");
+};
+
+//아래에 묶어서 사용할 수 있다.
+function sayHellow() {
+  console.log("heelow");
+}
+function sayBye() {
+  console.log("bye");
+}
+
+export { sayBye, sayHellow };
+```
+
+받아올 땐
+
+```js
+import { sayBye, sayHellow } from "/user.js";
+// 받아올 데이터가 많일 경우엔 esterisk로 표기
+import * as user from user.js
+```
+
+> 가져올 떈 구체적인 사항을 명시하는 것이 로딩 속도를 올리는데 좋음
+
+- export default
+
+| named export            | default export                  |
+| :---------------------- | :------------------------------ |
+| export class User {...} | export default class User {...} |
+| import {User} from ...  | import User form ...            |

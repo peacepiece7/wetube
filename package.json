@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon --exec babel-node index.js -e pug,js,json,css,scss"
+    "start": "nodemon --exec babel-node init.js -e pug,js,json,css,scss"
   },
   "author": "taetae",
   "license": "ISC",
@@ -24,6 +24,6 @@
     "nodemon": "^2.0.7"
   },
   "nodemonConfig": {
-    "delay": "2000"
+    "delay": "4000"
   }
 }
