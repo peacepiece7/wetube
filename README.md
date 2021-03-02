@@ -348,3 +348,9 @@ new User("John");
 | :---------------------- | :------------------------------ |
 | export class User {...} | export default class User {...} |
 | import {User} from ...  | import User form ...            |
+
+⚠ Modules work only via HTTP(s), not in local files
+
+|If you try to open a web-page locally, via file:// protocol, you’ll find that import/export directives don’t work.| 
+|Use a local web-server, such as static-server or use the “live server” capability of your editor, |
+|such as VS Code Live Server Extension to test modules.|
