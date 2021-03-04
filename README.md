@@ -18,7 +18,7 @@ npm init
 
 package.json생성
 
-## express
+## express install
 
 [express API document][https://expressjs.com/]
 
@@ -49,7 +49,7 @@ git에 push하기전에 올리면 안되거나 용량이 많아서 굳이 올릴
 
 추가로 pakage-lock.json도 적어주자
 
-## frist git push
+## frist git push (github)
 
 1. git에 repository생성하기
 
@@ -108,7 +108,7 @@ app.listen(PORT, handleListening);
   },
 ```
 
-## app.get (추가중)
+## express app.get (추가중)
 
 ```js
 function handleHome(req, res) {
@@ -165,7 +165,7 @@ npm install core-js@3
 
 `npm install moduleName -D`
 
-## nodemon
+## npm package nodemon
 
 [nodemon](https://www.npmjs.com/package/nodemon)<br>
 [nomemon doc](https://www.npmjs.com/package/nodemon)
@@ -180,7 +180,7 @@ above code work automatically restarting when you modifiied applications<br>
 공식 문서를 보면 pug추가하는 법이 나와있고(추가해놓긴 했는데 아마 scss도 가능할 듯)<br>
 delay주는 방법이나 따로 culry blanket을 만들어서 옵션을 추가하는 법등 다양하게 나와있음
 
-## app.use
+## express app.use
 
 ```js
 app.use(function (req, res, next) {
@@ -199,7 +199,7 @@ app.use(function (req, res, next) {
 
 위와 같이 미들웨어로서의 역할을 하려면 next()로 다음 함수로 넘어가도록 해줘야 함
 
-## morgan
+## npm package morgan
 
 [morgan](https://www.npmjs.com/package/morgan)
 
@@ -242,13 +242,13 @@ app.use(morgan("dev"));
 
 옵션에서 특정 값을 만족할 때만 랜더링하는 if문을 넣는 식으로 쓴다고 함, token , http setting부분은 잘 모르겠다.. fs가 file system이랑 관련있다는 거 정도..?
 
-## cookie parser
+## npm package cookie parser
 
 [cookie parser](https://www.npmjs.com/package/cookie-parser)
 
 `npm install cookie-parser`
 
-## body parser
+## npm package body parser
 
 [body-parser](https://www.npmjs.com/package/body-parser)
 
@@ -348,3 +348,113 @@ new User("John");
 | :---------------------- | :------------------------------ |
 | export class User {...} | export default class User {...} |
 | import {User} from ...  | import User form ...            |
+
+> 예를 들어
+
+```js
+// main.js
+import express from "express";
+const app = express();
+app.get("/", filehandler);
+
+export default app;
+```
+
+이렇게 메인에서 variable app을 export 해주면,
+
+```js
+// sub.js
+import app from "./main.js";
+app.listen(3000);
+```
+
+이렇게 sub.js에서 app.liste만 적어서 main애서 rounte설정을 끝마쳤기 때문에 상관없음
+
+⭐️ 이번 프로젝트에서 export, export default를 모두 사용하는데,<br>
+export default는 routers에서, export는 controller에서 씀<br>
+이 예제를 보고 어떤 경우에 export, defalut를 사용하는지 알아보자.<Br>
+
+```js
+// main.js
+export tesVariable=()=>{
+  express something like structures..
+}
+// sub.js
+{ testVariable } form "./main.js"
+```
+
+❗️❗️❗️ 매우중요한 거
+
+file:로 브라우저에서 script를 열면, export import가 작동하지 않으니까 주의!!<br>
+http로 통신해야 작동합니당
+
+## express.Router()
+
+[express.Router()](https://expressjs.com/en/4x/api.html#express.router)<br>
+end 포인트의 /url을 만들거나(get함수를 사용해서)<br>
+app.use()의 middleware를 만들 수 있다.(로그인이나 인증 할 떄)
+
+```js
+const router = express.Router([options]);
+```
+
+```js
+// 어떤 요청이든 이 라우터를 통해서 호출된다.
+router.use(function (req, res, next) {
+  // .. some logic here .. like any other middleware
+  next();
+});
+
+// /events로 끝나는 모든 요청을 처리함!
+// depends on where the router is "use()'d"
+// 하위 라우터임! 랜딩할 페이지의 위치나 로그인 조건 등을 설정할 수 있음
+router.get("/events", function (req, res, next) {
+  //you can express like above ex) res.render("main.pug");
+});
+```
+
+calendar/events 아렇게 **precedence(parents route)가 calendar인 mini app을 만들 수 있다.**
+
+```js
+app.use("/calendar", router);
+```
+
+## router를 따로 분리해서 적기
+
+Router file을 따로 만들어서 관리하기
+
+```js
+// router.js
+import express from "express";
+
+// userRouter말고도, videoRouter, glovalRouter등을 만들 것이기 때문에 export default를 하지 않는다.
+export const userRouter = express.Router();
+
+userRouter.get("/edit", (req, res) => {
+  res.sned("edit index");
+});
+```
+
+필요한 라우터를 작성하고, app init에서 app.use로 parent route 설정해주기
+
+```js
+// app,js
+import { userRouter } from "./main.js";
+app.use("/user", userRouter);
+```
+
+이렇게 하면 localhost:xxxx/user/edit 이라는 라우터가 만들어 졌다.
+
+## MVC
+
+Model, View, Controller으로
+
+M = data(그림판에 넣을 데이터)<br>
+V = how does the data look(그림판)<br>
+C = function that looks for the data(그림판으로 가는 기능 컨트롤러)<br>
+
+앞으로 MVC를 사용해 아래 것들을 만들거임
+
+1. Model은 mongodb로 data를 저장하고
+2. View는 pug,scss를 사용해서 화면을 꾸미고
+3. Controller는 CRUD+login등 기능들을 구현하는 오브젝트를 만들거임!(controller는 view, seaching, login, data parsing등 다양함)
