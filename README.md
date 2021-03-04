@@ -349,6 +349,7 @@ new User("John");
 | export class User {...} | export default class User {...} |
 | import {User} from ...  | import User form ...            |
 
+<<<<<<< HEAD
 > 예를 들어
 
 ```js
@@ -458,3 +459,10 @@ C = function that looks for the data(그림판으로 가는 기능 컨트롤러)
 1. Model은 mongodb로 data를 저장하고
 2. View는 pug,scss를 사용해서 화면을 꾸미고
 3. Controller는 CRUD+login등 기능들을 구현하는 오브젝트를 만들거임!(controller는 view, seaching, login, data parsing등 다양함)
+=======
+⚠ Modules work only via HTTP(s), not in local files
+
+|If you try to open a web-page locally, via file:// protocol, you’ll find that import/export directives don’t work.| 
+|Use a local web-server, such as static-server or use the “live server” capability of your editor, |
+|such as VS Code Live Server Extension to test modules.|
+>>>>>>> cbb4dfabd6e4ae993152e02906807da56eb3eb2f
