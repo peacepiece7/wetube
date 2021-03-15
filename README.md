@@ -574,8 +574,8 @@ console.log(`process.cwd()`, process.cwd());
 console.log(`app_root_path`, app_root_path);
 ```
 
-![참고 nodeJs doc](https://nodejs.org/docs/latest/api/modules.html#modules_dirname)
-![참고 app_root npm doc](https://www.npmjs.com/package/app-root-path)
+[참고 nodeJs doc](https://nodejs.org/docs/latest/api/modules.html#modules_dirname)
+[참고 app_root npm doc](https://www.npmjs.com/package/app-root-path)
 
 1. 현제 실행하는 파일의 절대경로를 의미한다.
 2. 현제 실행한 node js의 파일 경로를 의미함을 알 수 있다.
@@ -583,7 +583,7 @@ console.log(`app_root_path`, app_root_path);
 
 ### plain html, css를 view engin으로 사용하고 싶다면?
 
-![여기 링크를 누르면 자세한 내용을 볼 수 있음!](https://velopert.com/294)
+[여기 링크를 누르면 자세한 내용을 볼 수 있음!](https://velopert.com/294)
 
 public 이란 폴더를 만들어서 css를 저장
 
