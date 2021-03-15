@@ -1,19 +1,29 @@
 import express from "express";
 
 // Router url
-import userRouter from "./routers/userRouter";
-import videoRouter from "./routers/videoRouter";
 import globalRouter from "./routers/globalRouter";
 import routes from "./routes";
+import userRouter from "./routers/userRouter";
+import videoRouter from "./routers/videoRouter";
 
 // NPM package
-import morgan from "morgan";
-import helmet from "helmet";
 import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
+import helmet from "helmet";
+import morgan from "morgan";
 
 const app = express();
 
+console.log(process.cwd());
+console.log(`__dirname`, __dirname);
+
+app.set("views", process.cwd() + "/views");
+app.set("view engin", "pug");
+/* .html 사용할 때
+app.set("views", __dirname + "/views");
+app.set("view engine", "ejs");
+app.engine("html", require("ejs").renderFile);
+*/
 // Cookie Parser
 const cookieParserTest = (req, res, next) => {
   // Cookies that have not been signed

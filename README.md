@@ -349,7 +349,6 @@ new User("John");
 | export class User {...} | export default class User {...} |
 | import {User} from ...  | import User form ...            |
 
-<<<<<<< HEAD
 > 예를 들어
 
 ```js
@@ -428,11 +427,11 @@ Router file을 따로 만들어서 관리하기
 // router.js
 import express from "express";
 
-// userRouter말고도, videoRouter, glovalRouter등을 만들 것이기 때문에 export default를 하지 않는다.
+// userRouter말고도, videoRouter, globalRouter등을 만들 것이기 때문에 export default를 하지 않는다.
 export const userRouter = express.Router();
 
 userRouter.get("/edit", (req, res) => {
-  res.sned("edit index");
+  res.send("edit index");
 });
 ```
 
@@ -446,9 +445,60 @@ app.use("/user", userRouter);
 
 이렇게 하면 localhost:xxxx/user/edit 이라는 라우터가 만들어 졌다.
 
+## routes 파일로 라우터 이름 모아서 관리하기!
+
+`routes.js`
+
+파일을 만들어서
+
+```js
+// routes.js
+const routes = {
+  home : HOME,
+  user : USER,
+  userDetail : USER_DETAIL,
+  join : JOIN,
+  login : LOGIN.
+  logout : LOGOUT
+}
+
+const HOME = '/'
+const USER = '/user'
+const USER_DETAIL = '/:id/'
+const JOIN = '/join'
+const LOGIN = '/login'
+const LOGOUT = '/logout'
+
+export default routes
+```
+
+routes를 사용해야할 때 "home","userDetail".. 이런 식으로 외워서 쓰지 않고  
+routes.user, routes.home 이런식으로 작성해준다.
+
+```js
+//routers.js
+import routes from "./routes.js";
+import express from "express";
+
+const app = express.Router();
+
+app.get(routes.home, (req, res) => res.send("home page!"));
+app.get(routes.user, (req, res) => res.send("user page"));
+// 기존방식으로 쓰면 아래와 같다.
+app.get("/join", (req,res) => res.send("join Page!")
+app.get("/login", (req,res) => res.send("login page!"))
+```
+
+이런식으로 내가 라우팅할 페이지의 이름을 정해두면,  
+나중에 조건문을 써서 페이지를 랜더링 해야할 때(아이디가 일치할 경우나, 특정 조건이 맞을 경우)  
+작성이 수월해진다.  
+(근데 이 방식은 케바케인듯 나는 그냥 한 곳에 다 쓰는게 편핼 거 같은뎅)
+
 ## MVC
 
-Model, View, Controller으로
+### 1. MVC 모델 소개
+
+MVC (Model View Controller)
 
 M = data(그림판에 넣을 데이터)<br>
 V = how does the data look(그림판)<br>
@@ -459,10 +509,197 @@ C = function that looks for the data(그림판으로 가는 기능 컨트롤러)
 1. Model은 mongodb로 data를 저장하고
 2. View는 pug,scss를 사용해서 화면을 꾸미고
 3. Controller는 CRUD+login등 기능들을 구현하는 오브젝트를 만들거임!(controller는 view, seaching, login, data parsing등 다양함)
-=======
-⚠ Modules work only via HTTP(s), not in local files
+   ⚠ Modules work only via HTTP(s), not in local files
 
-|If you try to open a web-page locally, via file:// protocol, you’ll find that import/export directives don’t work.| 
+|If you try to open a web-page locally, via file:// protocol, you’ll find that import/export directives don’t work.|
 |Use a local web-server, such as static-server or use the “live server” capability of your editor, |
 |such as VS Code Live Server Extension to test modules.|
->>>>>>> cbb4dfabd6e4ae993152e02906807da56eb3eb2f
+
+### 2. MVC 방식으로 controller 작성하기
+
+controller.js 파일을 만들어서 router.js에서 랜더링해오는 페이지를 작성하는 부분을 따로 작성해준다.  
+제어하는 부분을 따로 만들어주는 것!
+
+```js
+// controller.js
+export const home = (res, req) => res.send("home page!");
+```
+
+export 했기 때문에 따로 import를 적지 않아도 내가 home 이라는 변수를 사용하면 자동으로 import가 작성된다.
+그럼 rotes.js에 controller를 더해주자
+
+```js
+import express from "express";
+import routes from "./routes.js";
+// import는 직접 안 적어도 알아서 적어짐( 헷갈리지 않게 직접 적어도 되공 )
+import { home } from "./controller.js";
+
+const app = express.Router();
+
+app.get(routes.home, home);
+```
+
+## PUG (view engin)
+
+terminal에
+
+`npm install pug`
+
+해주시고
+
+```js
+// app.js
+
+app.set("view engin", "pug");
+```
+
+view/home.pug를 만들고 내용을 작성하면 됨
+
+### 폴더 위치를 수정하고 싶다면?
+
+```js
+app.set("views", __dirname + "/views");
+```
+
+이렇게 /views로 시작하는 폴더 안에 pug를 넣겠다 라고 지정할 수 있는데  
+기본 default가 /views이기 떄문에 굳이 적을 필요는 없다.
+
+express documemt에 가보면  
+views는 process.cwd() + "/views" 라고 되어 있는데  
+아래와 같이 적어ㅓ 확인해 볼 수 있다.
+
+```js
+console.log(`__dirname`, __dirname);
+console.log(`process.cwd()`, process.cwd());
+console.log(`app_root_path`, app_root_path);
+```
+
+![참고 nodeJs doc](https://nodejs.org/docs/latest/api/modules.html#modules_dirname)
+![참고 app_root npm doc](https://www.npmjs.com/package/app-root-path)
+
+1. 현제 실행하는 파일의 절대경로를 의미한다.
+2. 현제 실행한 node js의 파일 경로를 의미함을 알 수 있다.
+3. 프로잭트 루트를 찾아준다.
+
+### plain html, css를 view engin으로 사용하고 싶다면?
+
+![여기 링크를 누르면 자세한 내용을 볼 수 있음!](https://velopert.com/294)
+
+public 이란 폴더를 만들어서 css를 저장
+
+1. views란 폴더를 만들어러 html 저장
+2. npm install ejs
+3. html랜더링 해오기, 폴더 위치는 상관없음
+
+```js
+app.get("/", (req, res) => render("index.html"));
+```
+
+4. app.js에서 이렇게 app.set을 설정해준다.
+
+사실 이 부분은 express api에서 봤는데 이해가 잘 안 됬음... ejs란 패키지를 처음 봐서 그런 듯 ㅎ;  
+위 사이트에서 ejs에 관해 알려줌
+
+```js
+var express = require("express");
+var app = express();
+var router = require("./router/main")(app);
+
+app.set("views", __dirname + "/views");
+app.set("view engine", "ejs");
+app.engine("html", require("ejs").renderFile);
+
+var server = app.listen(3000, function () {
+  console.log("Express server has started on port 3000");
+});
+```
+
+3번 째 줄은 router를 app으로 보낸다는 의미고,
+5번째 줄은 server가 이해할 수 있게 html이 어디에 위치해 있는지를 정의해 줌
+6-7줄은 서버가 html을 랜더링 할 때 ejs를 사용하라고 알려준는 것
+
+5. static file 다루기
+
+static file은 .js .css image file 등 을 말한다고 함
+
+```js
+app.use(express.static("public"));
+```
+
+이렇게 static파일의 위치를 지정해주면 된다, public 이란 폴더를 만들어서 그 안에 css. js 랜더링된 페이지에서 정적으로 작동할 파일을 넣겠다는 의미
+
+### 왜 pug를 써야하나? ( block, extends )
+
+에전엔 몰랐는데 큰 프로젝트를 할 경우 일일이 html을 수정하면 매우 귀찮아질 수 있다고 함  
+이때 .html이 지원하지 않는 기능이 있는데
+
+block, extends 임
+
+html skeleton 을 작성하기 위해 ./layouts/main.pug 파일을 만듬
+
+block "name"
+
+을 추가해줌
+
+```pug
+doctype html
+html
+    head
+        title WeTube
+    body
+        main
+            block content
+        footer
+            span &copy; WeTube
+```
+
+이제 확장할 pug 파일에 extends - block을 사용함
+
+home.pug 에 확장해보자
+
+```pug
+extends layouts/main
+block content
+    p hellow world
+```
+
+이렇게 작성하면 main.pug의 내용이 모두 home.pug로 옮겨지고,
+block content 다음 줄에 indent한 내용은 main.pug의 main tag안에 작성하는 것 처럼 같은 내용을 가질 수 있음
+
+### inclue로 partials 추가하기
+
+./views/partails/header.pug
+를 만들어서 이런 것을 적었다고 치고 (내용은 중요치 않음)
+
+```pug
+header.header
+    .header__column
+        i.fab.fa-youtube
+    .header__column
+        ul
+            li
+                a(href="#") Join
+            li
+                a(href="#") Log In
+```
+
+./views/layout/main.pug 에 위의 내용을 header tag 안에 붙여 넣기하자  
+이렇게 안 하고 main.pug에 다 적어도 상관없음, 어차피 main.pug가 html skeleton이니까!
+
+```pug
+doctype html
+html
+    heder
+        title hellow world page
+    include ../partials/header.pug
+    body
+        block content
+    footer
+
+```
+
+header.pug에 header tage가 있으니까 indentation line을 header tag와 동일한 위치에 include해줌!  
+차이가 있는진 모르겠는데 header.pug에 header tag빼고 클래스만 적어서 같이 작동함 ㅇㅇ
+이건 적다보면 감으로 알듯
+
+- 3/9일 2.15까지 함
