@@ -569,12 +569,15 @@ views는 process.cwd() + "/views" 라고 되어 있는데
 아래와 같이 적어ㅓ 확인해 볼 수 있다.
 
 ```js
+// 내장 함수
 console.log(`__dirname`, __dirname);
 console.log(`process.cwd()`, process.cwd());
+// app_root_path는 npm 따로 설치 해야 함
 console.log(`app_root_path`, app_root_path);
 ```
 
 [참고 nodeJs doc](https://nodejs.org/docs/latest/api/modules.html#modules_dirname)
+
 [참고 app_root npm doc](https://www.npmjs.com/package/app-root-path)
 
 1. 현제 실행하는 파일의 절대경로를 의미한다.
@@ -703,3 +706,61 @@ header.pug에 header tage가 있으니까 indentation line을 header tag와 동�
 이건 적다보면 감으로 알듯
 
 - 3/9일 2.15까지 함
+
+## Local Variable 만들기 ( in Pug )
+
+> 1.middlewares.js 파일을 만듬
+
+- 구조가 복잡해 지면 middleware는 따로 뺴서 관리하는게 좋으니까!
+  `middlewaraes.js`
+
+- middewares.js
+
+아래와 같이 작성하면, 지역변수로 siteNmae, routes가 설절된다.
+
+```js
+import routes from "./routes";
+
+export const localsMiddleware = (req, res, next) => {
+  res.locals.siteName = "wetube";
+  res.locals.routes = routes;
+  next();
+};
+```
+
+- app.js
+
+```js
+import { localsMiddleware } from "./middleware";
+
+//blah blah..
+
+app.use(localsMiddleware);
+
+//blahblah..
+```
+
+위와 같이 app.js에 middleware를 추가해 준다.
+
+> 2.pug에 지역변수 사용하기
+
+.js의 지역변수를 .pug에서 사용하려면
+
+`#{지역변수명}`
+
+을 입력해주면 된다.
+
+- .pug
+
+`title #{siteName}`
+
+이렇게 문자열을 타이틀로 쓰거나
+
+```pug
+a(hef=routes.join) go to Join!
+a(hef=routes.login) go to login!
+```
+
+이런 식으로 routes obj의 라우터 명을 가르키는 property를 지정할 수 있다.
+
+- 3/16일 2.16까지 함

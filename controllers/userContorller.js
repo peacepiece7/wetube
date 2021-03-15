@@ -1,7 +1,7 @@
-export const join = (req, res) => res.send("join.pug");
-export const login = (req, res) => res.send("login.pug");
-export const logout = (req, res) => res.send("logout.pug");
-export const users = (req, res) => res.send("users.pug");
-export const userDetail = (req, res) => res.send("userDetail.pug");
-export const editProfile = (req, res) => res.send("editProfile.pug");
-export const changePassword = (req, res) => res.send("changePassword.pug");
+export const join = (req, res) => res.render("join.pug");
+export const login = (req, res) => res.render("login.pug");
+export const logout = (req, res) => res.render("logout.pug");
+export const users = (req, res) => res.render("users.pug");
+export const userDetail = (req, res) => res.render("userDetail.pug");
+export const editProfile = (req, res) => res.render("editProfile.pug");
+export const changePassword = (req, res) => res.render("changePassword.pug");

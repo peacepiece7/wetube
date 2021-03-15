@@ -5,6 +5,7 @@ import globalRouter from "./routers/globalRouter";
 import routes from "./routes";
 import userRouter from "./routers/userRouter";
 import videoRouter from "./routers/videoRouter";
+import { localsMiddleware } from "./middleWares";
 
 // NPM package
 import bodyParser from "body-parser";
@@ -14,6 +15,7 @@ import morgan from "morgan";
 
 const app = express();
 
+// check directory root
 console.log(process.cwd());
 console.log(`__dirname`, __dirname);
 
@@ -24,6 +26,7 @@ app.set("views", __dirname + "/views");
 app.set("view engine", "ejs");
 app.engine("html", require("ejs").renderFile);
 */
+
 // Cookie Parser
 const cookieParserTest = (req, res, next) => {
   // Cookies that have not been signed
@@ -39,12 +42,18 @@ app.use(
     console.log(`⛑⛑⛑helmet resposive : ${res}`);
   })
 );
+
 // Body parser
 app.use(bodyParser.urlencoded({ extended: false }));
+
 //cookie parser
 app.use(cookieParser());
+
 // Morgan
 app.use(morgan("combined"));
+
+// middleware
+app.use(localsMiddleware);
 
 //Routers
 app.use("/", globalRouter);
